@@ -1,0 +1,178 @@
+{% extends "layouts/baseLayout.html" %}
+
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="{% static 'plugins/sweetalert2/sweetalert2.min.css' %}">
+{% endblock head %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Productos activos</h3>
+                    <button type="button" class="btn btn-primary float-right" data-toggle="modal" id="add" data-target="#EjemploModal">
+                        Agregar nuevo producto
+                    </button>                                                 
+                </div>
+                <div class="card-body">
+                    <table id="main_table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Comentarios</th>
+                                <th>Descripción</th>
+                                <th>Categoría</th>
+                                <th>Estatus</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Productos Inactivos</h3>                                     
+                </div>
+                <div class="card-body">
+                    <table id="inactive_table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Comentarios</th>
+                                <th>Categoría</th>
+                                <th>Estatus</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+
+    <div class="modal fade" id="EjemploModal" tabindex="-1" role="dialog" aria-labelledby="EjemploModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="EjemploModalLabel">Productos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'core:crear-producto' %}" id="crear_form">
+                        <div class="form-group">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" class="form-control" id="nombreProducto" name="nombre" placeholder="Nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="comentariosProducto">Comentarios</label>
+                            <textarea class="form-control" name="comentariosProducto" id="comentariosProducto" cols="30" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcionProducto">Descripción</label>
+                            <textarea class="form-control" name="descripcionProducto" id="descripcionProducto" cols="30" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoriaProducto">Categoría</label>
+                            <select class="form-control" name="categoriaProducto" id="categoriaProducto">
+                                <option value="1">Categoría 1</option>
+                                <option value="2">Categoría 2</option>
+                                <option value="3">Categoría 3</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="estatusProducto">Estatus</label>
+                            <select class="form-control" name="estatusProducto" id="estatusProducto">
+                                <option value="1">Activo</option>
+                                <option value="2">Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancel">Cancelar</button>
+                            <input type="submit" value="Guardar" class="btn btn-primary" id="save">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ActualizarModal" tabindex="-1" role="dialog" aria-labelledby="ActualizarModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="EjemploModalLabel">Productos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'core:editar-producto' %}" id="actualizar_form">
+                        <div class="form-group">
+                            <label for="id">Id del producto</label>
+                            <input type="text" class="form-control" id="idProducto" name="id" placeholder="Id" aria-label="readonly input example" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" class="form-control" id="nombreProductoAc" name="nombre" placeholder="Nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="comentariosProducto">Comentarios</label>
+                            <textarea class="form-control" name="comentariosProducto" id="comentariosProductoAc" cols="30" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcionProducto">Descripción</label>
+                            <textarea class="form-control" name="descripcionProducto" id="descripcionProductoAc" cols="30" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoriaProducto">Categoría</label>
+                            <select class="form-control" name="categoriaProducto" id="categoriaProductoAc">
+                                <option value="1">Categoría 1</option>
+                                <option value="2">Categoría 2</option>
+                                <option value="3">Categoría 3</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="estatusProducto">Estatus</label>
+                            <select class="form-control" name="estatusProducto" id="estatusProductoAc">
+                                <option value="1">Activo</option>
+                                <option value="2">Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancel">Cancelar</button>
+                            <input type="submit" value="Actualizar" class="btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+{% endblock content %}
+
+
+{% block scripts %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'dist/js/index.js' %}"></script>
+    <script src="{% static 'plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+{% endblock scripts %}
